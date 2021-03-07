@@ -1,0 +1,130 @@
+﻿@using Nop.Web.Framework.Models.DataTables
+@using Nop.Plugin.Misc.Ebay.Models
+@model List<Nop.Plugin.Misc.Ebay.Models.EbayClientViewModel>
+
+@{
+    //page title
+    // ViewBag.PageTitle = T("Admin.Catalog.Categories").Text;
+    //active menu item (system name)
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("Ebay Clients");
+}
+
+@{
+
+    //  var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Ebay Clients
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "ebay-clients-grid",
+                        UrlRead = new DataUrl("List", "EbayClients", null),
+                        Length = 5,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(EbayClientViewModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_ebayClients"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.UserName))
+                            {
+                                Title = T("Admin.Ebay.UserName").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.Token))
+                            {
+                                Title = T("Admin.Ebay.Token").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.TokenExpiresOn))
+                            {
+                                Title = T("Admin.Ebay.TokenExpiresOn").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.LastImportTime))
+                            {
+                                Title = T("Admin.Ebay.LastImportTime").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.Comments))
+                            {
+                                Title = T("Admin.Ebay.Comments").Text,
+                                Width = "300",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.IsActive))
+                            {
+                                Title = T("Admin.Ebay.IsActive").Text,
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(EbayClientViewModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+
+                    <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Url.Action("DeleteSelected", "EbayClients")",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#ebay-clients-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+                    </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Inventory",
+  "FriendlyName": "Inventory",
+  "SystemName": "Inventory",
+  "Version": "1.34",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Rizwan",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Inventory.dll",
+  "Description": "This plugin allows paying with Purchase Orders"
+}

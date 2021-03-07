@@ -1,0 +1,99 @@
+﻿
+@model Nop.Plugin.Misc.Ebay.Models.EbayClientViewModel
+@*<div asp-validation-summary=""></div>*@
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Token" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Token" asp-required="true" asp-disabled="true" asp-value="@Model.Token" />
+                            <span asp-validation-for="Token"></span>
+                            <div>Please Click <a href="@Url.Action("GetSignInUrlForToken")" target="_blank">here</a> to login and get ebay AuthnAuth Token</div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="LastImportTime" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="LastImportTime" asp-required="true" asp-value="@Model.LastImportTime" />
+                            <span asp-validation-for="LastImportTime"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Comments" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Comments" asp-required="true" asp-value="@Model.Comments" />
+                            <span asp-validation-for="Comments"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IsActive" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="IsActive" />
+                            <span asp-validation-for="IsActive"></span>
+                        </div>
+                    </div>
+                    </div>
+                 
+                    <div class="panel-footer">
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="add" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+
+@*                         <script> *@
+@*                             $(document).ready(function () { *@
+@*                                 $('#add').click(function () { *@
+@*                                     $('#add').attr('disabled', true); *@
+@*                                     var postData = { *@
+@*                                         EventName: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val(), *@
+@*                                         WidgetZones: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)").val() *@
+@*                                     }; *@
+@*                                     addAntiForgeryToken(postData); *@
+@* *@
+@*                                     $.ajax({ *@
+@*                                         cache: false, *@
+@*                                         type: "POST", *@
+@*                                         url: "@Html.Raw(Url.Action("CustomEventAdd", "FacebookPixel", new { configurationId = Model.Id }))", *@
+@*                                         data: postData, *@
+@*                                         success: function (data, textStatus, jqXHR) { *@
+@*                                             if (data.Result) { *@
+@*                                                 //reload grid *@
+@*                                                 updateTable('#grid'); *@
+@* *@
+@*                                                 //clear input value *@
+@*                                                 $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val(''); *@
+@*                                                 var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect"); *@
+@*                                                 input.value(""); *@
+@*                                                 input.trigger("change"); *@
+@*                                             } else { *@
+@*                                                 //display errors if returned *@
+@*                                                 display_nop_error(data); *@
+@*                                             } *@
+@*                                         }, *@
+@*                                         complete: function (jqXHR, textStatus) { *@
+@*                                             $('#add').attr('disabled', false); *@
+@*                                         } *@
+@*                                     }); *@
+@*                                 }); *@
+@*                             }); *@
+@*                         </script> *@
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+</div>

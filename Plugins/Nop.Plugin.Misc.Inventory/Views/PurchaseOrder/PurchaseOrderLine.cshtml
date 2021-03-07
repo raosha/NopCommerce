@@ -1,0 +1,55 @@
+﻿@model Nop.Plugin.Misc.Inventory.Models.PurchaseOrderLineViewModel
+
+<tr class="purchaseOrderLineRow" id="@Model.LineNumber">
+@{
+    var disabledString = "disabled=\"disabled\"";
+    var isDisabled = @Model.CreatingNewPurchaseOrderLine ? disabledString : string.Empty;
+    var isEditing = !@Model.CreatingNewPurchaseOrderLine;
+    var disableQuantityField = isEditing ? disabledString : string.Empty;
+    var disablePriceField = isEditing ? disabledString : string.Empty;
+}
+    <td style="width: 20%;">
+        <nop-select asp-for="ProductId" asp-items="Model.AvailableProducts" asp-multiple="false" class="PurchaseOrderLines-@Model.LineNumber-ProductId" asp-disabled="@isEditing" />
+        <input type="hidden" id="PurchaseOrderLines-@Model.LineNumber-ProductId" name="PurchaseOrderLines[@Model.LineNumber].ProductId" value="" />
+    </td>
+    <td style="width: 20%;">
+        <input type="number" class="orderQuantity" name="PurchaseOrderLines[@Model.LineNumber].OrderedQuantity" value="@Model.OrderedQuantity" 
+               style="text-align: center" data-decimals="0" min="1" max="100000" step="1" @disableQuantityField />
+    </td>
+    <td style="width: 20%;">
+        <input type="number" class="receivedQuantity" name="PurchaseOrderLines[@Model.LineNumber].ReceivedQuantity" value="@Model.ReceivedQuantity" 
+               data-decimals="0" min="0" max="@Model.OrderedQuantity" step="1" @isDisabled/>
+    </td>
+<td style="width: 20%;">
+  
+    <input type="number" class="unitPrice" value="@Model.UnitPrice" name="PurchaseOrderLines[@Model.LineNumber].UnitPrice" data-decimals="2" min="0.1" max="10000" step="0.1" @disablePriceField />
+</td>
+    <td style="width: 20%;">
+        <input type="number" class="total" value="@Model.Total" name="PurchaseOrderLines[@Model.LineNumber].Total" data-decimals="2" disabled="disabled" />
+    </td>
+
+<script>
+    $(document).ready(function () {
+
+        var productSelected = $('.PurchaseOrderLines-@Model.LineNumber-ProductId').val();
+        $('#PurchaseOrderLines-@Model.LineNumber-ProductId').val(productSelected);
+
+        $('.orderQuantity, .unitPrice').on('input propertychange paste',
+            function() {
+                var price = $(this).parents('tr').find(".unitPrice").val();
+                var qty = $(this).parents('tr').find(".orderQuantity").val();
+                $('.receivedQuantity').attr('max', qty);
+                var total = parseFloat(price * qty);
+                $(this).parents('tr').find(".total").val(total.toFixed(2));
+                TotalValueCalculation();
+            });
+        $('.PurchaseOrderLines-@Model.LineNumber-ProductId').change(function() {
+		    var productSelected = $('.PurchaseOrderLines-@Model.LineNumber-ProductId').val();
+			 $('#PurchaseOrderLines-@Model.LineNumber-ProductId').val(productSelected);
+
+        });
+
+    });
+
+
+</script>

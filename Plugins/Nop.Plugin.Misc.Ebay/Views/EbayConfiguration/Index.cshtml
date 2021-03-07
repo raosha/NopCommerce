@@ -1,0 +1,137 @@
+﻿@using Nop.Web.Framework.Models.DataTables
+@using Nop.Plugin.Misc.Ebay.Models
+@model List<Nop.Plugin.Misc.Ebay.Models.EbayConfigurationViewModel>
+
+@{
+    //page title
+    // ViewBag.PageTitle = T("Admin.Catalog.Categories").Text;
+    //active menu item (system name)
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("Ebay Configurations");
+}
+
+@{
+
+    //  var hideSearchBlock = genericAttributeService.GetAttribute<bool>(workContext.CurrentCustomer, hideSearchBlockAttributeName);
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Ebay Configuration
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "ebay-configuration-grid",
+                        UrlRead = new DataUrl("List", "EbayConfiguration", null),
+                        Length = 5,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.IsSandBox))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_categories"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.AppId))
+                            {
+                                Title = T("Admin.Ebay.AppId").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.DevId))
+                            {
+                                Title = T("Admin.Ebay.DevId").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.CertId))
+                            {
+                                Title = T("Admin.Ebay.CertId").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.SiteCode))
+                            {
+                                Title = T("Admin.Ebay.SiteCode").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.SignInUrl))
+                            {
+                                Title = T("Admin.Ebay.SignInUrl").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.EndPoint))
+                            {
+                                Title = T("Admin.Ebay.EndPoint").Text,
+                                Width = "150",
+                                ClassName =  NopColumnClassDefaults.CenterAll
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.IsActive))
+                            {
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Title = T("Admin.Ebay.IsActive").Text,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(EbayConfigurationViewModel.Id))
+                            {
+                                Title = T("Admin.Common.Edit").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonEdit(new DataUrl("Edit"))
+                            }
+                        }
+                    })
+
+                    <script>
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Url.Action("DeleteSelected", "EbayConfiguration")",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#ebay-configuration-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+                    </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

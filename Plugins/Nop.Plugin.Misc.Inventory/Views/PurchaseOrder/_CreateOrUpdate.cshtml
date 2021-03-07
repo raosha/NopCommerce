@@ -1,0 +1,90 @@
+﻿
+@model Nop.Plugin.Misc.Inventory.Models.PurchaseOrderViewModel
+
+@{
+    var isEditing = !@Model.CreatingNewPurchaseOrder;
+}
+
+<div asp-validation-summary="All"></div>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="PurchaseOrderName" />
+                                </div>
+                                <div class="col-md-4">
+                                    <nop-editor asp-for="PurchaseOrderName" asp-required="true"  asp-disabled= "@isEditing"/>
+                                    <span asp-validation-for="PurchaseOrderName"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="AvailableWarehouses" />
+                                </div>
+                                <div class="col-md-4">
+                                    <nop-select asp-for="AvailableWarehouseId" asp-items="Model.AvailableWarehouses"  asp-disabled= "@isEditing"/>
+                                    <span asp-validation-for="AvailableWarehouseId"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="VendorId" />
+                                </div>
+                                <div class="col-md-8">
+                                    <nop-select asp-for="VendorId" asp-items="Model.AvailableVendors"  asp-disabled= "@isEditing"/>
+                                    <span asp-validation-for="VendorId"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="AvailablePurchaseOrderStatuses" />
+                                </div>
+                                <div class="col-md-4">
+                                    <nop-select asp-for="AvailablePurchaseOrderStatusId" asp-items="Model.AvailablePurchaseOrderStatuses" asp-disabled= "@Model.CreatingNewPurchaseOrder"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-4">
+                                    <nop-label asp-for="AvailablePurchaseOrderPaymentStatuses" />
+                                </div>
+                                <div class="col-md-4">
+                                    <nop-select asp-for="AvailablePurchaseOrderPaymentStatusId" asp-items="Model.AvailablePurchaseOrderPaymentStatuses" asp-disabled="@Model.CreatingNewPurchaseOrder" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            @{
+                await Html.RenderPartialAsync("_PurchaseOrderLines", Model.PurchaseOrderLines);
+            }
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="col-md-4">
+                    <nop-label asp-for="Total" />
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="purchaseOrderTotal" value="@Model.Total" disabled="disabled"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-4">
+                    <nop-label asp-for="DeliveryDate" />
+                </div>
+                <div class="col-md-4">
+                    <nop-editor asp-for="DeliveryDate" asp-disabled="@Model.CreatingNewPurchaseOrder"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

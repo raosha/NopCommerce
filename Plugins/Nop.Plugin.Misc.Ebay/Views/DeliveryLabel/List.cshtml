@@ -1,0 +1,112 @@
+﻿@using Nop.Plugin.Misc.Ebay.Models
+@model Nop.Plugin.Misc.Ebay.Models.EbaySearchModel
+
+@{
+    //page title
+    // ViewBag.PageTitle = T("Admin.Catalog.Categories").Text;
+    //active menu item (system name)
+    Layout = "_AdminLayout";
+    Html.SetActiveMenuItemSystemName("DeliveryLabels");
+}
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        Delivery Label
+    </h1>
+    <div class="pull-right">
+        <a asp-action="Create" class="btn bg-blue">
+            <i class="fa fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+        <button type="button" id="delete-selected" class="btn bg-red">
+            <i class="fa fa-trash-o"></i>
+            @T("Admin.Common.Delete.Selected")
+        </button>
+        <nop-action-confirmation asp-button-id="delete-selected" />
+    </div>
+</div>
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+               {
+                   Name = "deliverylabel-grid",
+                   UrlRead = new DataUrl("List", "DeliveryLabel", null),
+                   Length = Model.PageSize,
+                   LengthMenu = Model.AvailablePageSizes,
+                   ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(DeliveryLabelViewModel.Id))
+                            {
+                                IsMasterCheckBox = true,
+                                Render = new RenderCheckBox("checkbox_deliverylabel"),
+                                ClassName =  NopColumnClassDefaults.CenterAll,
+                                Width = "50"
+                            },
+                            new ColumnProperty(nameof(DeliveryLabelViewModel.Base64Contents))
+                            {
+                                Title = "",
+                                Width = "150",
+                                Render = new RenderCustom("renderPicturesColumnProductPictureUrl")
+
+                            },
+                            new ColumnProperty(nameof(DeliveryLabelViewModel.Title))
+                            {
+                                Title = T("Admin.Ebay.DeliveryLabel.Title").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                            },
+                            new ColumnProperty(nameof(DeliveryLabelViewModel.Name))
+                            {
+                                Title = T("Admin.Ebay.DeliveryLabel.Name").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                            },
+                            new ColumnProperty(nameof(DeliveryLabelViewModel.Size))
+                            {
+                                Title = T("Admin.Ebay.DeliveryLabel.Size").Text,
+                                Width = "100",
+                                ClassName = NopColumnClassDefaults.CenterAll,
+                            }
+                        }
+               })
+
+                    <script>
+                        function renderPicturesColumnProductPictureUrl(data, type, row, meta) {
+                            var contents = 'data:' + row.MimeType + ';base64,' + row.Base64Contents;
+                            console.log('Contents to Display: ' + contents);
+                            return '<img alt="' + row.Id + '" src="' + contents + '" width="150" />';
+                        } 
+                        $(document).ready(function () {
+                            $('#delete-selected-action-confirmation-submit-button').bind('click', function () {
+                                var postData = {
+                                    selectedIds: selectedIds
+                                };
+                                addAntiForgeryToken(postData);
+                                $.ajax({
+                                    cache: false,
+                                    type: "POST",
+                                    url: "@Url.Action("DeleteSelected", "DeliveryLabel")",
+                                    data: postData,
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        $('#deleteSelectedFailed-info').text(errorThrown);
+                                        $('#deleteSelectedFailed').click();
+                                    },
+                                    complete: function (jqXHR, textStatus) {
+                                        updateTable('#deliverylabel-grid');
+                                    }
+                                });
+                                $('#delete-selected-action-confirmation').modal('toggle');
+                                return false;
+                            });
+                        });
+                    </script>
+                    <nop-alert asp-alert-id="deleteSelectedFailed" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

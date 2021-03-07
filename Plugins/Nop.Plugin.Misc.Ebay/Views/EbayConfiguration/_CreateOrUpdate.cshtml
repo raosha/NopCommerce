@@ -1,0 +1,153 @@
+﻿
+@model Nop.Plugin.Misc.Ebay.Models.EbayConfigurationViewModel
+@*<div asp-validation-summary="All"></div>*@
+
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel-group">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IsSandBox" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="IsSandBox" />
+                            <span asp-validation-for="IsSandBox"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DevId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DevId" asp-required="true" asp-value="@Model.DevId" />
+                            <span asp-validation-for="DevId"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AppId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AppId" asp-required="true" asp-value="@Model.AppId" />
+                            <span asp-validation-for="AppId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CertId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="CertId" asp-required="true" asp-value="@Model.CertId" />
+                            <span asp-validation-for="CertId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Version" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Version" asp-required="true" asp-value="@Model.Version" />
+                            <span asp-validation-for="Version"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="EndPoint" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="EndPoint" asp-required="true" asp-value="@Model.EndPoint" />
+                            <span asp-validation-for="EndPoint"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SignInUrl" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SignInUrl" asp-required="true" asp-value="@Model.SignInUrl" />
+                            <span asp-validation-for="SignInUrl"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SiteCode" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SiteCode" asp-required="true" asp-value="@Model.SiteCode" />
+                            <span asp-validation-for="SiteCode"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="RuName" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="RuName" asp-required="true" asp-value="@Model.RuName" />
+                            <span asp-validation-for="RuName"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <nop-label asp-for="IsActive" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="IsActive" />
+                            <span asp-validation-for="IsActive"></span>
+                        </div>
+                    </div>
+                    </div>
+
+                 
+                    <div class="panel-footer">
+                        <div class="form-group">
+                            <div class="col-md-9 col-md-offset-3">
+                                <button type="button" id="add" class="btn btn-primary">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                        </div>
+
+@*                         <script> *@
+@*                             $(document).ready(function () { *@
+@*                                 $('#add').click(function () { *@
+@*                                     $('#add').attr('disabled', true); *@
+@*                                     var postData = { *@
+@*                                         EventName: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val(), *@
+@*                                         WidgetZones: $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)").val() *@
+@*                                     }; *@
+@*                                     addAntiForgeryToken(postData); *@
+@* *@
+@*                                     $.ajax({ *@
+@*                                         cache: false, *@
+@*                                         type: "POST", *@
+@*                                         url: "@Html.Raw(Url.Action("CustomEventAdd", "FacebookPixel", new { configurationId = Model.Id }))", *@
+@*                                         data: postData, *@
+@*                                         success: function (data, textStatus, jqXHR) { *@
+@*                                             if (data.Result) { *@
+@*                                                 //reload grid *@
+@*                                                 updateTable('#grid'); *@
+@* *@
+@*                                                 //clear input value *@
+@*                                                 $("#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.EventName)").val(''); *@
+@*                                                 var input = $('#@Html.IdFor(model => model.CustomEventSearchModel.AddCustomEvent.WidgetZonesIds)').data("kendoMultiSelect"); *@
+@*                                                 input.value(""); *@
+@*                                                 input.trigger("change"); *@
+@*                                             } else { *@
+@*                                                 //display errors if returned *@
+@*                                                 display_nop_error(data); *@
+@*                                             } *@
+@*                                         }, *@
+@*                                         complete: function (jqXHR, textStatus) { *@
+@*                                             $('#add').attr('disabled', false); *@
+@*                                         } *@
+@*                                     }); *@
+@*                                 }); *@
+@*                             }); *@
+@*                         </script> *@
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+</div>

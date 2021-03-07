@@ -1,0 +1,131 @@
+﻿@using Newtonsoft.Json
+@model List<Nop.Plugin.Misc.Inventory.Models.PurchaseOrderLineViewModel>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table id="PurchaseOrderProductTable" class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th style="width: 20%;">Product</th>
+                        <th style="width: 20%;">Ordered Quantity</th>
+                        <th style="width: 20%;">Received Quantity</th>
+                        <th style="width: 20%;">Price</th>
+                        <th style="width: 20%;">Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    
+                    @for (int i = 0; i < Model.Count(); i += 1)
+                    {
+                            @*<tr class="purchaseOrderLineRow" id="TableRow-@Model[i].LineNumber" style="@(Model[i].IsVisible ? "display:block" : "display:none")">
+                                <td style="width: 20%;">
+                                    <nop-select asp-for="@Model[i].ProductId" asp-items="@Model[i].AvailableProducts" asp-multiple="false" />
+                                </td>
+                                <td style="width: 20%;">
+                                    <input type="number" id="OrderedQuantity-@i" name="PurchaseOrderLines[@i].OrderedQuantity" value="@Model[i].OrderedQuantity" data-decimals="2" min="1" max="1000000" step="1" />
+                                </td>
+                                <td style="width: 20%;">
+                                    <input type="number" id="ReceivedQuantity-@i" name="PurchaseOrderLines[@i].ReceivedQuantity" value="@Model[i].ReceivedQuantity" data-decimals="2" min="" max="10000" step="1" />
+                                </td>
+                                <td style="width: 20%;">
+                                    <input type="number" id="UnitPrice-@i" name="PurchaseOrderLines[@i].UnitPrice" value="@Model[i].UnitPrice" data-decimals="2" min="1" max="10000" step="0.1" />
+                                </td>
+                                <td style="width: 20%;">
+                                    <input type="number" id="Total-@i" name="PurchaseOrderLines[@i].Total" value="@Model[i].Total" data-decimals="2" min="1" max="10000" step="0.1" />
+                                </td>
+                            </tr>*@
+                        Model[i].LineNumber = i;
+                        //Console.WriteLine("Model >>>>" + JsonConvert.SerializeObject(Model[i]));
+                        @await Html.PartialAsync("PurchaseOrderLine", Model[i])
+                    }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @{
+            var visibility = @Model.Count > 0 ? "style = display:none " : string.Empty;
+        }
+        <input type="button" id="AddNewProduct" value="Add Product" @visibility />
+    </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+
+        $('#AddNewProduct').on('click',function() {
+            var selectedVendorId = $("#VendorId option:selected").val();
+            var arr = [];
+            var rowCount = $('#PurchaseOrderProductTable >tbody >tr').length;
+            $('#PurchaseOrderProductTable >tbody >tr').each(function() {
+                arr.push(this.id);
+            });
+
+            var nextRow = 0;
+            if (arr.length > 0)
+            {
+                nextRow = Math.max(...arr) +1;
+            }
+			if(selectedVendorId < 1)
+			{
+			alert('Please select vendor to continue');
+			return false;
+			}
+            $.get('@Url.Action("PurchaseOrderLine")?vendorId='+selectedVendorId +'&lineNumber='+nextRow, function(data) {
+			console.log('dataqq' + data);
+			$('#PurchaseOrderProductTable > tbody:last-child').append(data);
+            });
+            });
+      });
+
+
+function TotalValueCalculation()
+	{
+	var total = 0;
+	$('#PurchaseOrderProductTable').find('.total').each((element, index) => {
+        total += parseFloat($(index).val());
+    });
+        if (total)
+        {
+            $('#purchaseOrderTotal').val(parseFloat(total));
+            console.log('total valiue is ' + total);
+	}
+    }
+
+function ValidateOrderBeforeSubmit() {
+        var i = 0;
+		var result = true;
+        var orderLineCount = $('#PurchaseOrderProductTable >tbody >tr').length;
+        if (orderLineCount < 1) {
+            alert('Please Add product to order');
+            return false;
+        }
+        $('#PurchaseOrderProductTable >tbody >tr').each(function() {
+            i++;
+            var price = $(this).find(".unitPrice").val();
+            var qty = $(this).find(".orderQuantity").val();
+            var recievedQty = $(this).find(".receivedQuantity").val();
+
+            if (parseFloat(price) <= 0 ) {
+                alert('Invalid Price for product at line ' + i);
+                result= false;
+            }
+
+            if (qty <= 0) {
+                alert('Invalid Quantity for product ' + i);
+                result= false;
+            }
+            if (recievedQty > qty) {
+                alert('Received quantity cannot be greater than ordered quantity at line  ' + i);
+                result= false;
+            }
+			console.log(i);
+        });
+		console.log('result is '+ result);
+        if(i == orderLineCount && result)
+		{
+		//$('#PurchaseOrder').submit();
+		}
+    }
+</script>

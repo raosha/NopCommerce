@@ -1,0 +1,40 @@
+﻿@using Nop.Web.Framework.Models.DataTables
+@using Nop.Plugin.Misc.Inventory.Models
+@model List<Nop.Plugin.Misc.Inventory.Models.PurchaseOrderLineViewModel>
+<div class="content">
+    <div class="form-horizontal">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table id="PurchaseOrderProductTable">
+                    <tr>
+                        <th>Product Id</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                    
+                    @{
+                        foreach (var line in Model)
+                        {
+                            @await Html.PartialAsync("_CreateOrderLine", line)
+                        }
+                    }
+                </table>
+            </div>
+        </div>
+        <input type="button" id="AddNewProduct"/>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('AddNewProduct').on('click',
+            function() {
+
+                alert('new product');
+            });
+
+
+    });
+</script>
+
+

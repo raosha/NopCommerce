@@ -1,0 +1,79 @@
+@model Nop.Plugin.Misc.Inventory.Models.PurchaseOrderViewModel
+
+@{
+    //page title
+    ViewBag.PageTitle = "Purchase Orders";
+    Layout = "_AdminLayout";    //page title
+    Html.SetActiveMenuItemSystemName("Purchase Orders");
+
+    var pageHeader = "";
+    var isEditing = !@Model.CreatingNewPurchaseOrder;
+    pageHeader = isEditing ? "Edit Purchase Order" : "Create New Purchase Order";
+}
+
+<form asp-controller="PurchaseOrder" asp-action="Create" method="post">
+    <div class="content-header clearfix">
+        <h1 class="pull-left">
+            @pageHeader
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">Back to List</a>
+            </small>
+        </h1>
+        <div class="pull-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @*<button type="submit" name="save-continue" class="btn bg-blue">
+                    <i class="fa fa-floppy-o"></i>
+                    @T("Admin.Common.SaveContinue")
+                </button>*@
+        </div>
+    </div>
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+    <div>
+
+    </div>
+
+</form>
+<script>
+    $(document).on("submit", "form", function (e) {
+        e.preventDefault();
+        var i = 0;
+        var result = true;
+        var orderLineCount = $('#PurchaseOrderProductTable >tbody >tr').length;
+        if (orderLineCount < 1) {
+            alert('Please Add product to order');
+            return false;
+        }
+        $('#PurchaseOrderProductTable >tbody >tr').each(function () {
+            i++;
+            var price = $(this).find(".unitPrice").val();
+            var qty = $(this).find(".orderQuantity").val();
+            var recievedQty = $(this).find(".receivedQuantity").val();
+
+            if (parseFloat(price) <= 0) {
+                alert('Invalid Price for product at line ' + i);
+                result = false;
+            }
+
+            if (qty <= 0) {
+                alert('Invalid Quantity for product ' + i);
+                result = false;
+            }
+            if (recievedQty > qty) {
+                alert('Received quantity cannot be greater than ordered quantity at line  ' + i);
+                result = false;
+            }
+            console.log(i);
+        });
+        console.log('result is ' + result);
+        if (i == orderLineCount && result) {
+            e.currentTarget.submit();
+        }
+
+    });
+
+</script>

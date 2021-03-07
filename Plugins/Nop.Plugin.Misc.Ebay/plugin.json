@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Ebay",
+  "FriendlyName": "Ebay Order Import",
+  "SystemName": "Ebay Order Import",
+  "Version": "1.00",
+  "SupportedVersions": [ "4.40" ],
+  "Author": "Rizwan Murtaza",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Misc.Ebay.dll",
+  "Description": ""
+}
